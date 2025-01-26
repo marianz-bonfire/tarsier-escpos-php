@@ -704,7 +704,7 @@ class Printer
      * @param int $size Pixel size to use. Must be 1-16 (default 3)
      * @param int $model QR code model to use. Must be one of Printer::QR_MODEL_1, Printer::QR_MODEL_2 (default) or Printer::QR_MICRO (not supported by all printers).
      */
-    public function qrCode(string $content, int $ec = Printer::QR_ECLEVEL_L, int$size = 3, int $model = Printer::QR_MODEL_2)
+    public function qrCode(string $content, int $ec = Printer::QR_ECLEVEL_L, int $size = 3, int $model = Printer::QR_MODEL_2)
     {
         self::validateInteger($ec, 0, 3, __FUNCTION__);
         self::validateInteger($size, 1, 16, __FUNCTION__);
@@ -1035,7 +1035,7 @@ class Printer
      * @param string $m Modifier/variant for function. Often '0' where used.
      * @throws InvalidArgumentException Where the input lengths are bad.
      */
-    protected function wrapperSend2dCodeData(string $fn, string $cn, string$data = '', string $m = '')
+    protected function wrapperSend2dCodeData(string $fn, string $cn, string $data = '', string $m = '')
     {
         if (strlen($m) > 1 || strlen($cn) != 1 || strlen($fn) != 1) {
             throw new InvalidArgumentException("wrapperSend2dCodeData: cn and fn must be one character each.");
@@ -1052,7 +1052,7 @@ class Printer
      * @param string $data Data to send.
      * @throws InvalidArgumentException Where the input lengths are bad.
      */
-    protected function wrapperSendGraphicsData(string $m, string $fn, string$data = '')
+    protected function wrapperSendGraphicsData(string $m, string $fn, string $data = '')
     {
         if (strlen($m) != 1 || strlen($fn) != 1) {
             throw new InvalidArgumentException("wrapperSendGraphicsData: m and fn must be one character each.");

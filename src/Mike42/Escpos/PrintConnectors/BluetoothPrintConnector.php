@@ -47,7 +47,7 @@ class BluetoothPrintConnector implements PrintConnector
      * @var array $devices
      *  List of all scanned bluetooth devices.
      */
-    private $devices = [];
+    public $devices = [];
 
     /**
      * Represents Linux
@@ -95,7 +95,8 @@ class BluetoothPrintConnector implements PrintConnector
         } else {
             throw new BadMethodCallException("Printer '" . $dest . "' is not a valid printer name.");
         }
-        $this -> getBluetoothDevices();
+        $this -> devices = $this -> getBluetoothDevices();
+
         if (!$this -> check($this -> printerName)) {
             throw new BadMethodCallException("Printer '" . $dest . "' is not found in the list.");
         }
@@ -199,7 +200,7 @@ class BluetoothPrintConnector implements PrintConnector
      * registered in Windows system regardless of the type such AUDIO, MOBILE, etc.
      *
      */
-    protected function getBluetoothDevices()
+    public function getBluetoothDevices()
     {
         $command = "{$this->agentPath} --list";
         $outputStr = '';
@@ -212,7 +213,7 @@ class BluetoothPrintConnector implements PrintConnector
 
         if ($res && isset($res->status)) {
             if ($res->status === self::SUCCESS) {
-                $this -> devices = isset($res->devices) ? json_decode($res->devices) : [];
+                return isset($res->devices) ? $res->devices : [];
             } else {
                 throw new Exception($res->message); // print error message from bluetooth agent
             }
