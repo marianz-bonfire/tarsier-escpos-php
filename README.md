@@ -325,6 +325,17 @@ copy foo.txt LPT1
 del foo.txt
 ```
 
+✴️ The Bluetooth agent is designed to work with a Bluetooth printer that is already paired with a Windows computer. The agent, available in the [tarsier_bluetooth_agent.exe](https://github.com/marianz-bonfire/php-bluetooth-windows) repository, provides functionality to list available Bluetooth devices and send data for printing.
+
+**Important**: The agent does not include the capability to pair with Bluetooth devices. Pairing must be completed on your Windows machine using either the default Bluetooth settings or a third-party utility application. Once the printer is paired, the agent can seamlessly handle device discovery and printing tasks.
+
+
+```
+echo "Hello World" > foo.txt
+tarsier_bluetooth_agent.exe --print="Printer001" --path="foo.txt"
+del foo.txt
+```
+
 If you have troubles at this point, then you should consult your OS and printer system documentation to try to find a working print command.
 
 ### Using a PrintConnector
@@ -337,6 +348,20 @@ For example, a `NetworkPrintConnector` accepts an IP address and port:
 use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 use Mike42\Escpos\Printer;
 $connector = new NetworkPrintConnector("10.x.x.x", 9100);
+$printer = new Printer($connector);
+try {
+    // ... Print stuff
+} finally {
+    $printer -> close();
+}
+```
+
+✴️ For example, a `BluetoothPrintConnector` with a paired Bluetooth device.
+
+```php
+use Mike42\Escpos\PrintConnectors\BluetoothPrintConnector;
+use Mike42\Escpos\Printer;
+$connector = new BluetoothPrintConnector("Printer001");
 $printer = new Printer($connector);
 try {
     // ... Print stuff

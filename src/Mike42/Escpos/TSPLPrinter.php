@@ -261,10 +261,10 @@ class TSPLPrinter
      * @param int $height - Vertical length of label
      * @param SizeUnit $unit - Vertical length of label
      */
-    public function setSize(int $width, int $height, $unit = SizeUnit::MILIMETER)
+    public function setSize(float $width, float $height, $unit = SizeUnit::MILIMETER)
     {
-        self::validateInteger($width, 1, 100, __FUNCTION__);
-        self::validateInteger($height, 1, 100, __FUNCTION__);
+        self::validateFloat($width, 1, 100, __FUNCTION__);
+        self::validateFloat($height, 1, 100, __FUNCTION__);
         self::validateEnumMulti($unit, SizeUnit::class, __FUNCTION__);
 
         $str = Command::SIZE;
@@ -293,7 +293,7 @@ class TSPLPrinter
      * @param int $verticalMultiplication
      * @param Alignment $alignment
      */
-    public function text(string $text, int $x = 10, int $y = 10, int $font = 0, int $rotation = 0, int $horizontalMultiplication = 1, int $verticalMultiplication = 1, int $alignment = Alignment::JUSTIFY_LEFT)
+    public function text(string $text, int $x = 10, int $y = 10, int $font = 1, int $rotation = 0, int $horizontalMultiplication = 1, int $verticalMultiplication = 1, int $alignment = Alignment::JUSTIFY_LEFT)
     {
         self::validateIntegerMulti($rotation, [0, 90, 180, 270], __FUNCTION__);
         self::validateInteger($horizontalMultiplication, 1, 10, __FUNCTION__);
@@ -477,16 +477,23 @@ class TSPLPrinter
             $str .= $noOfCopy;
         }
         $this -> connector->write($str . Command::LINE_BREAK);
-        $this -> connector->write(Command::EOP);
+        $this -> connector->write(Command::EOP . Command::LINE_BREAK);
     }
 
     /**
      * Print command will print the label format currently stored in the image buffer.
      * with the default offset and copies
+     * 
+     * @param int $autoClose If true you don't need to call $printer->close();
+     * @param int $copy Number of copies to be printed
      */
-    public function print($copy = 1)
+    public function print($autoClose = true, $copy = 1)
     {
         $this -> setPrint(1, $copy);
+        if ($autoClose) {
+            $this -> close();
+            $this -> buffer = null;
+        }
     }
 
     /**
@@ -512,6 +519,11 @@ class TSPLPrinter
     protected static function validateInteger(int $test, int $min, int $max, string $source, string $argument = "Argument")
     {
         self::validateIntegerMulti($test, [[$min, $max]], $source, $argument);
+    }
+
+    protected static function validateFloat(float $test, float $min, float $max, string $source, string $argument = "Argument")
+    {
+        self::validateIntegerMulti(intval($test), [[intval($min), intval($max)]], $source, $argument);
     }
 
     /**
