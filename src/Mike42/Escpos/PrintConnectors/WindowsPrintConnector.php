@@ -170,7 +170,7 @@ class WindowsPrintConnector implements PrintConnector
 
     public function finalize()
     {
-        $data = implode($this -> buffer);
+        $data = is_array($this -> buffer) ? implode($this -> buffer) : $this -> buffer;
         $this -> buffer = null;
         if ($this -> platform == self::PLATFORM_WIN) {
             $this -> finalizeWin($data);
